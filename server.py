@@ -10,6 +10,11 @@ sel = selectors.DefaultSelector()
 _timelapsed_start = time.time()
 _host = "127.0.0.1"
 _port = 65432
+_LOOP_TIME = 10
+
+def execute_func():
+    print("Do something")
+
 
 def accept(sock):
     conn, addr = sock.accept()
@@ -56,20 +61,18 @@ try:
                 accept(key.fileobj)
     
             else:
-                while _timelapsed > 10.0:
+                while _timelapsed > _LOOP_TIME:
                     if(key.data is None):
                         continue
                     break
-            if(_timelapsed > 11):
+            if(_timelapsed > _LOOP_TIME + 1):
+                execute_func()
                 sys.exit(1)    
 
             print(_timelapsed)
 
         
                 
-
-        #print(_timelapsed)
-
 except KeyboardInterrupt:
     print("caught keyboard interrupt, exiting")
 finally:
