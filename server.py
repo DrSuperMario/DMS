@@ -3,17 +3,19 @@ import socket
 import selectors
 import types
 import time
+import os
+
 
 sel = selectors.DefaultSelector()
 
 
 _timelapsed_start = time.time()
-_host = "127.0.0.1"
-_port = 65432
-_LOOP_TIME = 10
+_host = socket.gethostname()
+_port = 5001
+_LOOP_TIME = 20
 
 def execute_func():
-    print("Do something")
+    os.system("echo 'HEeelo world'")
 
 
 def accept(sock):
@@ -41,7 +43,7 @@ def service(key, mask):
 #open connection to TCP/IPv4
 lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 lsock.bind((_host, _port))
-lsock.listen()
+lsock.listen(2)
 print("listening on", (_host, _port))
 lsock.setblocking(False)
 sel.register(lsock, selectors.EVENT_READ, data=None)

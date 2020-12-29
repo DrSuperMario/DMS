@@ -1,23 +1,19 @@
-import sys
 import socket
-import selectors
-import types
 
-sel = selectors.DefaultSelector()
 
-_host = "127.0.0.1"
-_port = 65432
-
+_host = "165.227.149.157"
+_port = 5001
 
 
 def start_conn(host, port):
     server_addr = (host, port) 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.setblocking(False)
-    sock.connect_ex(server_addr)
-    events = selectors.EVENT_READ | selectors.EVENT_WRITE
-    data = b"Keepalive"
-    sel.register(sock, events, data=data)
+    sock.setblocking(1)
+    sock.connect(server_addr)
+    message = "Keepalive"
+    sock.send(message.encode())
+    sock.close()
+    
 
-
-start_conn(_host, int(_port))
+if __name__=="__main___":
+    start_conn(_host, _port)
