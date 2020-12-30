@@ -1,10 +1,12 @@
+from DMS.smtp import send_email
 import sys
 import socket
 import selectors
 import types
 import time
 import os
-
+from datetime import datetime
+from smtpst import send_email
 
 sel = selectors.DefaultSelector()
 
@@ -13,9 +15,12 @@ _timelapsed_start = time.time()
 _host = socket.gethostname()
 _port = 5001
 _LOOP_TIME = 20
+PASSWD = "<BLANK>"
 
 def execute_func():
-    os.system("echo 'HEeelo world'")
+    send_email(messages='DEAD MAN SWITCH ACTIVATED', 
+                    subject=f"DMS active at {str(datetime.now())}", password=PASSWD)
+    os.system("echo 'hello world'")
 
 
 def accept(sock):
