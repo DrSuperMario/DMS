@@ -1,4 +1,3 @@
-from DMS.smtp import send_email
 import sys
 import socket
 import selectors
@@ -6,15 +5,15 @@ import types
 import time
 import os
 from datetime import datetime
-from smtpst import send_email
+from smtp import send_email
 
 sel = selectors.DefaultSelector()
 
 
 _timelapsed_start = time.time()
-_host = socket.gethostname()
+_host = ''#socket.gethostname()
 _port = 5001
-_LOOP_TIME = 20
+_LOOP_TIME = 10
 PASSWD = "<BLANK>"
 
 def execute_func():
@@ -76,8 +75,25 @@ try:
                 execute_func()
                 sys.exit(1)    
 
-            print(_timelapsed)
+            toolbar_width = int(_timelapsed+1)
 
+            # setup toolbar
+            sys.stdout.write(f"Waiting connection: {int(_timelapsed)}s "+"[%s]" % (" " * toolbar_width))
+            sys.stdout.flush()
+            sys.stdout.write("\b" * (toolbar_width+1)) # return to start of line, after '['
+            sys.stdout.flush()
+          
+
+            for i in range(toolbar_width+1):
+                sys.stdout.flush()
+                time.sleep(0.1) # do real work here
+                # update the bar
+                sys.stdout.write("#")
+                sys.stdout.flush()
+                
+
+            sys.stdout.write("]\n") # this ends the progress bar
+            os.system('cls')
         
                 
 except KeyboardInterrupt:
