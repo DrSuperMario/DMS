@@ -27,10 +27,15 @@ def execute_func():
 
 def check_platform_and_resources():
     if(platform.system() == "Windows"):
-        return "using windows good Job"
+        return False
     else:
-        return "Go back to sleeps"
+        return True
 
+def catch_mem_usage():
+    mem_usage = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    if(mem_usage > (mem_usage_at_start+1000)):
+        sys.stdout.flush()
+        raise MemoryError
 
 def accept(sock):
     conn, addr = sock.accept()
@@ -58,6 +63,12 @@ def service(key, mask):
 lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 lsock.bind((_host, _port))
 lsock.listen(2)
+
+if(check_platform_and_resources()):
+    global mem_usage_at_start
+    mem_usage_at_start = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    print(f"System usage in time of start: {mem_usage_at_start} MB\n\n")
+
 print("listening on", (_host, _port))
 lsock.setblocking(False)
 sel.register(lsock, selectors.EVENT_READ, data=None)
@@ -97,7 +108,8 @@ try:
             for i in range(toolbar_width+1):
                 sys.stdout.flush()
                 time.sleep(0.1) # do real work here
-                platform = check_platform_and_resources()
+                
+                catch_mem_usage()
                 # update the bar
                 sys.stdout.write("#")
                 sys.stdout.flush()
