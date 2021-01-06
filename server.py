@@ -4,6 +4,9 @@ import selectors
 import types
 import time
 import os
+import platform
+import resource
+
 
 from datetime import datetime
 from smtp import send_email
@@ -21,6 +24,12 @@ def execute_func():
     send_email(messages='DEAD MAN SWITCH ACTIVATED', 
                     subject=f"DMS active at {str(datetime.now())}", password=PASSWD)
     os.system("echo 'hello world'")
+
+def check_platform_and_resources():
+    if(platform.system() == "Windows"):
+        return "using windows good Job"
+    else:
+        return "Go back to sleeps"
 
 
 def accept(sock):
@@ -75,7 +84,7 @@ try:
             if(_timelapsed > _LOOP_TIME + 1):
                 execute_func()
                 sys.exit(1)    
-
+            
             toolbar_width = int(_timelapsed+1)
 
             # setup toolbar
@@ -88,6 +97,7 @@ try:
             for i in range(toolbar_width+1):
                 sys.stdout.flush()
                 time.sleep(0.1) # do real work here
+                platform = check_platform_and_resources()
                 # update the bar
                 sys.stdout.write("#")
                 sys.stdout.flush()
